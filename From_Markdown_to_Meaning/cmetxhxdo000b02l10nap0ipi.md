@@ -42,6 +42,8 @@ For this proof of concept, I have vectorised a few documents related to Pentesti
 
 My goal is to recursively process every document in the Obsidian vault, extract text from embedded images (internal and external links, and seamlessly integrate that content back into the original document flow. After that, each document is stored in a ChromaDB vector store — with careful attention to preserving its context, structure, and metadata for meaningful retrieval.
 
+If you'd like to follow along or tweak the code yourself, feel free to grab the Jupyter notebook from my GitHub repo: [Neural-and-Firewall-Blog](https://github.com/BeardedTech/Neural-and-Firewall-Blog/blob/main/From_Markdown_to_Meaning/From_Markdown_to_Meaning.ipynb)
+
 ## Code Section 1: Setting Up Required Packages and Environment
 
 ### Requirements:
@@ -505,7 +507,7 @@ The beauty of this approach is that our documents become dynamic, accessible kno
 
 ### A Simple RAG Demo
 
-We'll use a simple code snippet to demonstrate RAG using **RetrievalQA** \- a chain in LangChain, which enables LLMs to answer questions with context pulled from custom data sources. This results in answers that are more accurate, specific, and context-aware.
+We'll use a simple code snippet to demonstrate RAG using **RetrievalQA** - a chain in LangChain, which enables LLMs to answer questions with context pulled from custom data sources. This results in answers that are more accurate, specific, and context-aware.
 
 ```python
 from langchain.chains import RetrievalQA
