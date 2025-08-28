@@ -42,7 +42,10 @@ For this proof of concept, I have vectorised a few documents related to Pentesti
 
 My goal is to recursively process every document in the Obsidian vault, extract text from embedded images (internal and external links, and seamlessly integrate that content back into the original document flow. After that, each document is stored in a ChromaDB vector store — with careful attention to preserving its context, structure, and metadata for meaningful retrieval.
 
-If you'd like to follow along or tweak the code yourself, feel free to grab the Jupyter notebook from my GitHub repo: [Neural-and-Firewall-Blog](https://github.com/BeardedTech/Neural-and-Firewall-Blog/blob/main/From_Markdown_to_Meaning/From_Markdown_to_Meaning.ipynb)
+<div data-node-type="callout">
+<div data-node-type="callout-emoji">🗃</div>
+<div data-node-type="callout-text">If you'd like to follow along or tweak the code yourself, feel free to grab the Jupyter notebook from my <strong>GitHub repo: </strong><a target="_self" rel="noopener noreferrer nofollow" href="https://github.com/BeardedTech/Neural-and-Firewall-Blog/blob/main/From_Markdown_to_Meaning/From_Markdown_to_Meaning.ipynb" style="pointer-events: none"><strong>Neural-and-Firewall-Blog</strong></a></div>
+</div>
 
 ## Code Section 1: Setting Up Required Packages and Environment
 
