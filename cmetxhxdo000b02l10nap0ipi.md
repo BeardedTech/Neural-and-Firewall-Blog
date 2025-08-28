@@ -196,7 +196,7 @@ pip install easyocr
 
 In the following code block, we will define two functions.
 
-* The first function handles local image files stored in your local drive: it opens the image and passes it to Tesseract to retrieve any embedded text.
+* The first function handles local image files stored in your local drive: it opens the image and passes it to EasyOCR to retrieve any embedded text.
     
 * The second function works with image URLs: it sends an HTTP request with headers to fetch the image. It tries twice, and if successful, converts the response into an image object and applies the same OCR process.
     
