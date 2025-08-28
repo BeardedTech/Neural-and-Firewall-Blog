@@ -104,10 +104,10 @@ This will make it available to all subsequent cells in that notebook session.
 ```python
 from langchain.document_loaders import ObsidianLoader
 # Load Markdown files from Obsidian directory 
-loader = ObsidianLoader(path="Path/To/Obsidian/Vault/", collect_metadata=True) 
+loader = ObsidianLoader(path="Path/To/Obsidian/Vault/", collect_metadata=True) # <-- Change this path
 documents = loader.load()
 # Base directory for images 
-image_base_path = "Path/To/Obsidian/Vault/Attachments/Folder"
+image_base_path = "Path/To/Obsidian/Vault/Attachments/Folder" # <-- Change this path
 ```
 
 ## **Code Section 2: Setting up Tesseract for OCR**
@@ -122,6 +122,15 @@ To install Tesseract on Windows:
     
 * If you are using Jupyter Notebook, it is best to restart the Notebook.
     
+
+In the following code block, we will define two functions.
+
+* The first function handles local image files stored in your local drive: it opens the image and passes it to Tesseract to retrieve any embedded text.
+    
+* The second function works with image URLs: it sends an HTTP request with headers to fetch the image. It tries twice, and if successful, converts the response into an image object and applies the same OCR process.
+    
+
+Both functions include error handling to manage cases where the image is unreadable or the request fails.
 
 ```python
 import pytesseract
@@ -185,6 +194,15 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
 pip install easyocr
 ```
 
+In the following code block, we will define two functions.
+
+* The first function handles local image files stored in your local drive: it opens the image and passes it to Tesseract to retrieve any embedded text.
+    
+* The second function works with image URLs: it sends an HTTP request with headers to fetch the image. It tries twice, and if successful, converts the response into an image object and applies the same OCR process.
+    
+
+Both functions include error handling to manage cases where the image is unreadable or the request fails.
+
 ```python
 import easyocr
 import os
@@ -232,6 +250,8 @@ def extract_text_from_image_url(image_url):
 ```
 
 ## Code Section 3: Extract and Embed Text from Image Links
+
+The following code block processes the collection of documents, scanning each one for embedded image references—either URLs or local file paths. For every image found, it uses OCR to extract any visible text and appends that text directly beneath the image reference in the document. It also updates each document with its name and source path, enriching the content with both metadata and extracted insights. This approach is especially useful for making image-based information searchable and accessible within text-based workflows.
 
 ```python
 import requests
@@ -366,8 +386,8 @@ from langchain_chroma import Chroma
 from langchain.retrievers import ContextualCompressionRetriever 
 from langchain.retrievers.document_compressors import LLMChainExtractor
 
-persist_directory = 'Path/To/New/Chroma/Directory'
-collection_name = "blog_collection"
+persist_directory = 'Path/To/New/Chroma/Directory' # <-- Change this path
+collection_name = "blog_collection" # <-- Change to any name
 
 embedding = OpenAIEmbeddings()
 vectordb = Chroma(
