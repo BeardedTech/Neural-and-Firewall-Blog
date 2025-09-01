@@ -16,7 +16,7 @@ The command line has always been a place for power users — fast, flexible, and
 
 In this guide, we’ll start with ShellGPT — an AI-powered CLI companion that can chat, generate commands, and execute them directly in your system.
 
-And we won’t stop there. ShellGPT already comes with a built-in function called execute\_shell\_command, which allows it to run generated commands. We’ll add a brand‑new custom function call (tool) to its toolset — one that can query your knowledge store and return relevant documents directly in your CLI session.
+And we won’t stop there. ShellGPT already comes with a built-in function called execute\_shell\_command, which allows it to run generated commands. We’ll add a brand‑new custom function call (tool) to its toolset — one that can query your knowledge store and return relevant documents directly inside your CLI session.
 
 Then we’ll take it further by integrating ChromaDB and LangChain to add Retrieval‑Augmented Generation (RAG), wiring that custom tool to your notes so the terminal can reason over your personal knowledge base. The result is a context‑aware assistant that doesn’t just respond — it acts, informed by your own data.
 
@@ -206,18 +206,20 @@ Fuzzing Python script: 1.py
 
 ### Step 4: Create a Custom Function for ShellGPT
 
-ShellGPT already supports function calling, and comes with built‑in tools like `execute_shell_command`. In this step, we’ll **add our own custom function** to its toolset — one that acts as a bridge between ShellGPT and the [`qurey.py`](http://qury.py) driver we built earlier.
+ShellGPT already supports function calling, and comes with built‑in tools like `execute_shell_command`. In this step, we’ll **add our own custom function** to its toolset — one that acts as a bridge between ShellGPT and the [`query.py`](http://qury.py) driver we built earlier.
 
 This new function will:
 
-* Accept a natural‑language question from ShellGPT.
+* **Accept** a natural‑language question from ShellGPT.
     
-* Pass that question to [`query.py`](http://qury.py) to retrieve relevant documents from your ChromaDB store.
+* **Pass** that question to the [query.py](http://query.py) driver you built in Step 3.
     
-* Return those documents so ShellGPT can use OpenAI’s LLM to generate a context‑aware answer.
+* **Retrieve** relevant documents from your ChromaDB store.
     
-
-By doing this, we’re effectively giving ShellGPT a new “skill” — the ability to query your personal knowledge base on demand.
+* **Return** those documents so ShellGPT can use the LLM to craft a context‑aware answer.
+    
+    By wiring this in, you’re effectively teaching ShellGPT to “look things up” in your personal notes before answering — turning it into a context‑aware terminal assistant.
+    
 
 Install the following required package in your environment
 
@@ -289,6 +291,17 @@ if __name__ == "__main__":
 
 Save the above as a Python file, for example, query\_chat.py in your Shell-GPT Folder: `~/.config/shell_gpt/functions`
 
+### **How It Works**
+
+1. **ShellGPT** receives your query in CHAT or REPL mode.
+    
+2. The chromadb\_query function runs [query.py](http://query.py) with your question.
+    
+3. [query.py](http://query.py) uses LangChain to pull the top 5 relevant documents from ChromaDB.
+    
+4. ShellGPT uses those documents as context to generate a tailored, informed answer.
+    
+
 # RAG Demo with ShellGPT
 
 In the following example, I asked ShellGPT: **“How to use Python to create a port scanner?”** — but with the added context **“from my notes.”**
@@ -331,6 +344,14 @@ To create a simple port scanner in Python, you can use the socket library. Here'
 This script attempts to connect to each port in the specified range and lists the open ones. Adjust the IP and port
 range as needed.
 ````
+
+### **Before vs After RAG**
+
+| **<mark>Without RAG</mark>** | **<mark>With RAG</mark>** |
+| --- | --- |
+| Generic answer from model’s training data | Answer grounded in my own notes |
+| May miss my preferred tools or methods | Matches my documented workflows |
+| No awareness of past experiments | Recalls exactly what I’ve done before |
 
 <div data-node-type="callout">
 <div data-node-type="callout-emoji">💡</div>
