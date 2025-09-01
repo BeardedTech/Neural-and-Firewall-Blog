@@ -14,7 +14,11 @@ tags: langchain, chromadb, rag, shellgpt, ai-cli
 
 The command line has always been a place for power users — fast, flexible, and unforgiving. But what if your terminal could do more than just run commands? What if it could *understand* your intent, execute the right actions, and even pull answers from your own notes before acting?
 
-In this guide, we’ll start with ShellGPT — an AI-powered CLI companion that can chat, generate commands, and execute them directly in your system. Then we’ll take it further by integrating ChromaDB and LangChain to add Retrieval-Augmented Generation (RAG), giving your terminal the ability to reason over your personal knowledge base. The result is a context-aware assistant that doesn’t just respond — it acts, informed by your own data.
+In this guide, we’ll start with ShellGPT — an AI-powered CLI companion that can chat, generate commands, and execute them directly in your system.
+
+And we won’t stop there. ShellGPT already comes with a built-in function called execute\_shell\_command, which allows it to run generated commands. We’ll add a brand‑new custom function call (tool) to its toolset — one that can query your knowledge store and return relevant documents directly in your CLI session.
+
+Then we’ll take it further by integrating ChromaDB and LangChain to add Retrieval‑Augmented Generation (RAG), wiring that custom tool to your notes so the terminal can reason over your personal knowledge base. The result is a context‑aware assistant that doesn’t just respond — it acts, informed by your own data.
 
 # Meet ShellGPT: Your AI-Powered Command Line Companion
 
@@ -44,7 +48,7 @@ What enables ShellGPT to be a powerful tool for automation and system administra
 
 Here is an example provided in the GitHub repo where ShellGPT uses function call to generate a system command and then executes the command:
 
-![Code snippet sShellGPT is tasked to list files in the `/tmp` folder. ShellGPT then generates the code to list files and then executes the code, thus revealing `test.txt` and `test.json`.](https://cdn.hashnode.com/res/hashnode/image/upload/v1756658729668/c5f3c8c8-0a0d-46a6-b60f-21e95afaa1e7.png align="center")
+![Code snippet sShellGPT is tasked to list files in the  folder. ShellGPT then generates the code to list files and then executes the code, thus revealing  and .](https://cdn.hashnode.com/res/hashnode/image/upload/v1756658729668/c5f3c8c8-0a0d-46a6-b60f-21e95afaa1e7.png align="center")
 
 # Unlocking Context: ShellGPT + ChromaDB
 
@@ -96,7 +100,8 @@ pip install langchain-openai
 The following Python driver will handle semantic queries over your ChromaDB collection, utilising LangChain’s retrievers to retrieve 5 documents that match the query.
 
 ```python
-# qury.py
+# query.py
+# Save this in ~/.config/shell_gpt/
 
 import subprocess
 import argparse
@@ -165,13 +170,13 @@ Save the above as a Python file, for example, query.py in your Shell-GPT Folder:
 To test the driver file:
 
 ```bash
-python qury.py “your question here based on ChromaDB documents”
+python query.py “your question here based on ChromaDB documents”
 ```
 
 Here is an example of the query Python driver retrieving 5 documents based on my question:
 
 ````plaintext
- > python.exe qury.py "how to use python for pentesting?"
+ > python3 query.py "how to use python for pentesting?"
 Received question: how to use python for pentesting?
 Retrieved 5 documents.
 Document 1:
@@ -201,9 +206,18 @@ Fuzzing Python script: 1.py
 
 ### Step 4: Create a Custom Function for ShellGPT
 
-A custom function file in ShellGPT defines Python functions that GPT can invoke directly from the terminal. It enables the automation of tasks such as system commands, file operations, or API calls using natural language.
+ShellGPT already supports function calling, and comes with built‑in tools like `execute_shell_command`. In this step, we’ll **add our own custom function** to its toolset — one that acts as a bridge between ShellGPT and the [`qurey.py`](http://qury.py) driver we built earlier.
 
-We’ll create a custom function file named query\_chat.py, which acts as a bridge to the [query.py](http://query.py) driver we built earlier. This setup enables ShellGPT to retrieve relevant documents from your ChromaDB store and generate answers using OpenAI’s LLM, making your terminal truly context-aware.
+This new function will:
+
+* Accept a natural‑language question from ShellGPT.
+    
+* Pass that question to [`query.py`](http://qury.py) to retrieve relevant documents from your ChromaDB store.
+    
+* Return those documents so ShellGPT can use OpenAI’s LLM to generate a context‑aware answer.
+    
+
+By doing this, we’re effectively giving ShellGPT a new “skill” — the ability to query your personal knowledge base on demand.
 
 Install the following required package in your environment
 
@@ -213,7 +227,7 @@ pip install instructor
 
 ```python
 # query_chat.py
-
+# Save this in ~/.config/shell_gpt/functions
 import subprocess
 import os
 from pydantic import Field
@@ -302,7 +316,7 @@ The code:
 ----------------------------------------------------------------------------------------------------
 
 
-▌ @FunctionCall chomadb_query(question="how to use python to create a port scanner")
+▌ @FunctionCall chromadb_query(question="how to use python to create a port scanner")
 
 To create a simple port scanner in Python, you can use the socket library. Here's a basic example:
 
